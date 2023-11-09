@@ -1,0 +1,15 @@
+---
+- name: Apply system patches
+  hosts: all
+  become: yes
+  tasks:
+    - name: Apply all available updates
+      ansible.builtin.yum:
+        name: '*'
+        state: latest
+      register: patching
+
+    - name: Reboot the server if kernel updates were installed
+      ansible.builtin.reboot:
+      when: '"kernel" in patching.results | map(attribute="name") | join(" ")'
+

@@ -1,0 +1,17 @@
+---
+- name: Send email notification
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Send patching report email
+      community.general.mail:
+        host: smtp.gmail.com
+        port: 587
+        username: example@gmail.com
+        password: "{{ email_password }}"
+        to: IT-Support <example@gmail.com>
+        subject: Patching Report for {{ ansible_hostname }}
+        body: The patching process has completed. Please check the attached logs.
+        attach: /var/log/patching.log
+      delegate_to: localhost
+

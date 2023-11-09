@@ -1,0 +1,10 @@
+---
+- name: Start Nginx service
+  hosts: web_servers
+  become: yes
+  tasks:
+    - name: Start nginx service
+      ansible.builtin.service:
+        name: nginx
+        state: started
+

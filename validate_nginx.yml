@@ -1,0 +1,10 @@
+---
+- name: Validate Nginx is running
+  hosts: web_servers
+  become: false
+  tasks:
+    - name: Check that the Nginx service is running
+      ansible.builtin.uri:
+        url: http://localhost
+        status_code: 200
+
