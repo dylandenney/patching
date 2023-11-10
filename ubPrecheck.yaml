@@ -15,6 +15,10 @@
       changed_when: false
       when: apt_cache.cache_updated | default(false)
 
+    - name: Set fact for updates availability
+      set_fact:
+        updates_available: "{{ upgradable_packages.stdout != '' }}"
+      when: apt_cache.cache_updated | default(false)    
 
 
 
