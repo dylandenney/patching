@@ -15,13 +15,16 @@
 
     - name: Skip patching if no updates are available
       meta: end_play
-      when: not updates_flag.stat.exists or updates_flag.stat.size == 0 or 'upgradable' not in updates_content.stdout
+      when: >
+        not updates_flag.stat.exists or 
+        updates_flag.stat.size == 0 or 
+        'upgradable' not in updates_content.stdout
 
     - name: Update all packages to the latest version
       ansible.builtin.apt:
         upgrade: dist
         update_cache: yes
-      when: 'upgradable' in updates_content.stdout
+      when: "'upgradable' in updates_content.stdout"
 
     - name: Check if a reboot is required
       stat:
