@@ -9,22 +9,19 @@
       register: updates_flag
 
     - name: Read the updates available file
-      command: cat /tmp/updates_available.flag
-      register: updates_content
+      shell: cat /tmp/updates_available.flag | grep upgradable | wc -l
+      register: updates_count
       when: updates_flag.stat.exists
 
     - name: Skip patching if no updates are available
       meta: end_play
-      when: >
-        not updates_flag.stat.exists or 
-        updates_flag.stat.size == 0 or 
-        'upgradable' not in updates_content.stdout
+      when: updates_count.stdout | int == 0
 
     - name: Update all packages to the latest version
       ansible.builtin.apt:
         upgrade: dist
         update_cache: yes
-      when: "'upgradable' in updates_content.stdout"
+      when: updates_count.stdout | int > 0
 
     - name: Check if a reboot is required
       stat:
@@ -34,3 +31,4 @@
     - name: Reboot the server if required
       ansible.builtin.reboot:
       when: reboot_required.stat.exists
+
