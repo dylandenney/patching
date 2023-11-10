@@ -15,10 +15,12 @@
       changed_when: false
       when: apt_cache.cache_updated | default(false)
 
-    - name: Set fact for updates availability
-      set_fact:
-        updates_available: "{{ upgradable_packages.stdout != '' }}"
-      when: apt_cache.cache_updated | default(false)    
+  
+    - name: Create a flag file if updates are available
+      file:
+        path: /tmp/updates_available.flag
+        state: touch
+      when: upgradable_packages.stdout != ''
 
 
 
