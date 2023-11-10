@@ -3,6 +3,16 @@
   hosts: all
   become: yes
   tasks:
+    - name: Check if updates are available
+      stat:
+        path: /tmp/updates_available.flag
+      register: updates_flag
+
+    - name: Skip patching if no updates are available
+      meta: end_play
+      when: not updates_flag.stat.exists
+
+  
     - name: Update all packages to the latest version
       ansible.builtin.apt:
         upgrade: dist
