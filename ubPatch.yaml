@@ -10,7 +10,7 @@
 
     - name: Skip patching if no updates are available
       meta: end_play
-      when: not updates_flag.stat.exists
+      when: not updates_flag.stat.exists or updates_flag.stat.size == 0
 
   
     - name: Update all packages to the latest version
