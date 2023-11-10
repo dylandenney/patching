@@ -1,11 +1,16 @@
-- name: Check for available updates
-  ansible.builtin.apt:
-    update_cache: yes
-    cache_valid_time: 3600  # Optional: Cache timeout in seconds
-  register: apt_cache
+---
+- name: Pre-patch checks
+  hosts: all
+  become: yes
+  tasks:
+    - name: Check for available updates
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 3600  # Optional: Cache timeout in seconds
+      register: apt_cache
 
-- name: List all upgradable packages
-  command: apt list --upgradable
-  register: upgradable_packages
-  changed_when: false
-  when: apt_cache.updated_cache
+    - name: List all upgradable packages
+      command: apt list --upgradable
+      register: upgradable_packages
+      changed_when: false
+      when: apt_cache.updated_cache
