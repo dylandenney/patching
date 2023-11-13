@@ -1,0 +1,36 @@
+---
+- name: Install and start NGINX
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 3600 # Update the cache if it's older than 1 hour
+
+    - name: Install NGINX
+      ansible.builtin.apt:
+        name: nginx
+        state: latest
+
+    - name: Start NGINX and enable on boot
+      ansible.builtin.systemd:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Add a simple HTML page
+      ansible.builtin.copy:
+        dest: /var/www/html/index.html
+        content: |
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Welcome to NGINX on Ansible!</title>
+          </head>
+          <body>
+            <h1>Success! The NGINX server is installed and running on Ansible!</h1>
+          </body>
+          </html>
+        mode: '0644'
