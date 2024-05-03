@@ -20,7 +20,8 @@
         upgrade: dist
         update_cache: yes
       when: updates_count.stdout | int > 0
-
+      ignore_errors: yes
+      
     - name: Check if a reboot is required
       stat:
         path: /var/run/reboot-required
